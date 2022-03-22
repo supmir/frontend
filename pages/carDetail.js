@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { isNotEmpty } from "../utils/validation";
-export default function carDetail() {
+export default function CarDetail() {
   const router = useRouter();
   function back() {
     router.push("/");
