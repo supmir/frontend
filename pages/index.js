@@ -11,10 +11,15 @@ export default function Home() {
   const [startDate, setStartDate] = useState();
   const [email, setEmail] = useState("");
   function validateForm() {
+    if (!startDate) {
+      return false;
+    }
+    const age = (new Date() - startDate) / 1000 / 60 / 60 / 24 / 365;
     return (
       first &&
       last &&
-      startDate &&
+      age < 100 &&
+      age > 100 &&
       email
         .toLowerCase()
         .match(
