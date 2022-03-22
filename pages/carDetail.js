@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { isNotEmpty } from "../utils/validation";
 export default function carDetail() {
   const router = useRouter();
   function back() {
@@ -7,24 +8,49 @@ export default function carDetail() {
   }
 
   function submitData() {
-    if (validateForm()) {
+    const { success, message } = validateForm();
+
+    if (success) {
       router.push("complete");
     } else {
-      alert(` plate ${plate} claims ${claims} years ${years} make ${make} model ${model} manuDate ${manuDate}
-      `);
+      alert(message);
     }
   }
 
   const [plate, setPlate] = useState("");
   const [claims, setClaims] = useState(true);
-  const [years, setYears] = useState(0);
+  const [years, setYears] = useState("0");
   const [make, setMake] = useState("");
   const [model, setModel] = useState("");
   const [manuDate, setManuDate] = useState("");
   function validateForm() {
-    return (
-      plate && claims && !isNaN(years) && make && model && !isNaN(manuDate)
-    );
+    if (!isNotEmpty(plate)) {
+      return { success: false, message: "Please fill in your Plate Number" };
+    }
+    if (!isNotEmpty(claims)) {
+      return {
+        success: false,
+        message: "Please specify if you've made a claim before",
+      };
+    }
+    if (!isNotEmpty(years) || isNaN(years)) {
+      return { success: false, message: "Please check your license duration" };
+    }
+    if (!isNotEmpty(make)) {
+      return { success: false, message: "Please fill in your vehicle make" };
+    }
+    if (!isNotEmpty(model)) {
+      return { success: false, message: "Please fill in your vehicle model" };
+    }
+    if (!isNotEmpty(manuDate) || isNaN(manuDate)) {
+      return {
+        success: false,
+        message: "Please check your vehicle manufacturing date",
+      };
+    }
+    return {
+      success: false,
+    };
   }
   return (
     <div className="flex justify-center">
