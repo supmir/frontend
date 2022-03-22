@@ -1,4 +1,3 @@
-import Head from "next/head";
 import { useRouter } from "next/router";
 
 export default function Home() {
@@ -8,9 +7,6 @@ export default function Home() {
   }
   return (
     <div className="flex justify-center">
-      <Head>
-        <script src="https://unpkg.com/flowbite@1.4.0/dist/datepicker.js"></script>
-      </Head>
       <div className="flex max-w-xl">
         <div className="w-2/3">Welcome to The Insurance Company</div>
         <div className="w-1/3">
