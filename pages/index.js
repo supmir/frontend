@@ -3,6 +3,12 @@ import { useRouter } from "next/router";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useState } from "react";
+import {
+  getYearDifference,
+  isAnEmail,
+  isNotEmpty,
+  isWithinRange,
+} from "../utils/validation";
 
 export default function Home() {
   const router = useRouter();
@@ -11,28 +17,36 @@ export default function Home() {
   const [startDate, setStartDate] = useState();
   const [email, setEmail] = useState("");
   function validateForm() {
-    if (!startDate) {
-      return false;
+    if (!isNotEmpty(first)) {
+      return { success: false, message: "Please fill in your first name" };
     }
-    const age = (new Date() - startDate) / 1000 / 60 / 60 / 24 / 365;
-    return (
-      first &&
-      last &&
-      age < 100 &&
-      age > 100 &&
-      email
-        .toLowerCase()
-        .match(
-          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        )
-    );
+    if (!isNotEmpty(last)) {
+      return { success: false, message: "Please fill in your last name" };
+    }
+    const age = getYearDifference(startDate, new Date());
+    if (!isWithinRange(age, 18, 100)) {
+      return {
+        success: false,
+        message: "You must be between the age of 18 and 100 to be eligible",
+      };
+    }
+    if (!isAnEmail(email)) {
+      return {
+        success: false,
+        message: "Your email address seems to be off. Please check.",
+      };
+    }
+    return {
+      success: true,
+    };
   }
 
   function submitData() {
-    if (validateForm()) {
+    const { success, message } = validateForm();
+    if (success) {
       router.push("carDetail");
     } else {
-      alert("Invalid data");
+      alert(message);
     }
   }
   return (
